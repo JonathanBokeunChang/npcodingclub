@@ -2,60 +2,68 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 
 export function CTA() {
   return (
-    <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+    <section className="py-24 bg-[#10162f] relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#29cc57]/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+        }}
+      />
+
+      <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            Start your journey today
-          </div>
-
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
             Ready to Start Your
             <br />
-            Coding Journey?
+            <span className="text-gradient">Coding Journey?</span>
           </h2>
 
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
-            Join hundreds of students learning to code with NP Coding Club.
+          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Join students learning to code at New Providence Coding Club.
             It&apos;s completely free, forever.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/signup">
-              <Button
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-slate-100 group"
-              >
-                Create Free Account
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <Link href="/signup" className="btn-3d btn-3d-green text-lg px-10 py-4">
+              Create Free Account
+              <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
-            <Link href="/learn">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-blue-600"
-              >
-                Browse Courses
-              </Button>
+            <Link href="/learn" className="btn-3d btn-3d-white text-lg px-10 py-4">
+              Browse Courses
             </Link>
+          </div>
+
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-400">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-[#29cc57]" />
+              <span>No credit card required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-[#29cc57]" />
+              <span>120+ lessons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-[#29cc57]" />
+              <span>Free forever</span>
+            </div>
           </div>
         </motion.div>
       </div>

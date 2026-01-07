@@ -48,60 +48,85 @@ export function LevelMap({ course, completedLessons = [], currentLesson }: Level
     return 'locked';
   };
 
-  // Generate zigzag positions
-  const getPosition = (index: number, total: number) => {
-    const row = Math.floor(index / 3);
-    const col = index % 3;
-    const isEvenRow = row % 2 === 0;
+  // Duolingo-style winding path - more organic curve
+  const getPosition = (index: number) => {
+    const amplitude = 25; // How far the path curves left/right
+    const wavelength = 6; // How many nodes before the pattern repeats
 
-    // Zigzag pattern: left-to-right on even rows, right-to-left on odd rows
-    const actualCol = isEvenRow ? col : 2 - col;
-
-    const x = 20 + actualCol * 30; // 20%, 50%, 80%
-    const y = 80 + row * 120; // Start at 80px, 120px between rows
+    // Create a smooth sine wave pattern
+    const x = 50 + amplitude * Math.sin((index / wavelength) * Math.PI * 2);
+    const y = 100 + index * 100; // 100px between each node
 
     return { x, y };
   };
 
+  // Get course accent color
+  const getCourseColor = () => {
+    switch (course.id) {
+      case 'web-dev':
+        return { primary: '#f97316', secondary: '#ea580c' };
+      case 'python-ml':
+        return { primary: '#3b82f6', secondary: '#2563eb' };
+      case 'usaco':
+        return { primary: '#8b5cf6', secondary: '#7c3aed' };
+      default:
+        return { primary: '#29cc57', secondary: '#20a547' };
+    }
+  };
+
+  const colors = getCourseColor();
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-x-hidden pb-20"
-      style={{ minHeight: `${Math.ceil(allLessons.length / 3) * 140 + 150}px` }}
+      className="relative w-full max-w-lg mx-auto overflow-hidden pb-20"
+      style={{ minHeight: `${allLessons.length * 100 + 200}px` }}
     >
-      {/* Decorative background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-purple-50/30 dark:from-transparent dark:via-blue-900/10 dark:to-purple-900/10" />
+      {/* Background decorations */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl opacity-20"
+          style={{ background: colors.primary }}
+        />
+        <div
+          className="absolute top-1/2 right-10 w-40 h-40 rounded-full blur-3xl opacity-15"
+          style={{ background: colors.secondary }}
+        />
+      </div>
 
       {/* SVG Path connecting nodes */}
       {mounted && (
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{ minHeight: `${Math.ceil(allLessons.length / 3) * 140 + 150}px` }}
+          style={{ minHeight: `${allLessons.length * 100 + 200}px` }}
         >
           <defs>
-            <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor={course.gradientFrom} />
-              <stop offset="100%" stopColor={course.gradientTo} />
+            <linearGradient id={`pathGradient-${course.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor={colors.primary} />
+              <stop offset="100%" stopColor={colors.secondary} />
             </linearGradient>
           </defs>
 
           {allLessons.slice(0, -1).map((lesson, index) => {
-            const currentPos = getPosition(index, allLessons.length);
-            const nextPos = getPosition(index + 1, allLessons.length);
+            const currentPos = getPosition(index);
+            const nextPos = getPosition(index + 1);
             const isCompleted = completedLessons.includes(lesson.id);
+
+            // Calculate control point for bezier curve
+            const midY = (currentPos.y + nextPos.y) / 2;
 
             return (
               <motion.path
                 key={`path-${index}`}
-                d={`M ${currentPos.x}% ${currentPos.y} Q ${(currentPos.x + nextPos.x) / 2}% ${(currentPos.y + nextPos.y) / 2 - 20} ${nextPos.x}% ${nextPos.y}`}
+                d={`M ${currentPos.x}% ${currentPos.y}
+                    Q ${currentPos.x}% ${midY} ${nextPos.x}% ${nextPos.y}`}
                 fill="none"
-                stroke={isCompleted ? 'url(#pathGradient)' : '#e2e8f0'}
-                strokeWidth="4"
+                stroke={isCompleted ? `url(#pathGradient-${course.id})` : '#e5e7eb'}
+                strokeWidth="6"
                 strokeLinecap="round"
-                strokeDasharray={isCompleted ? 'none' : '8 8'}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
+                transition={{ duration: 0.5, delay: index * 0.03 }}
               />
             );
           })}
@@ -113,24 +138,30 @@ export function LevelMap({ course, completedLessons = [], currentLesson }: Level
         const firstLessonIndex = course.modules
           .slice(0, moduleIndex)
           .reduce((acc, m) => acc + m.lessons.length, 0);
-        const firstPos = getPosition(firstLessonIndex, allLessons.length);
+        const firstPos = getPosition(firstLessonIndex);
 
         return (
-          <div
+          <motion.div
             key={module.id}
-            className="absolute left-0 right-0 text-center"
-            style={{ top: `${firstPos.y - 60}px` }}
+            className="absolute left-0 right-0 text-center pointer-events-none"
+            style={{ top: `${firstPos.y - 55}px` }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + moduleIndex * 0.1 }}
           >
-            <span className="inline-block bg-white dark:bg-slate-800 px-4 py-1.5 rounded-full text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <span
+              className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white shadow-lg"
+              style={{ background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` }}
+            >
               {module.name}
             </span>
-          </div>
+          </motion.div>
         );
       })}
 
       {/* Level Nodes */}
       {allLessons.map((lesson, index) => {
-        const pos = getPosition(index, allLessons.length);
+        const pos = getPosition(index);
         const status = getLessonStatus(lesson);
 
         return (
@@ -144,13 +175,19 @@ export function LevelMap({ course, completedLessons = [], currentLesson }: Level
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3, delay: index * 0.03 }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 20,
+              delay: index * 0.03
+            }}
           >
             <LevelNode
               lesson={lesson}
               status={status}
               courseId={course.id}
               levelNumber={index + 1}
+              colors={colors}
             />
           </motion.div>
         );
@@ -164,63 +201,108 @@ interface LevelNodeProps {
   status: 'locked' | 'available' | 'current' | 'completed';
   courseId: string;
   levelNumber: number;
+  colors: { primary: string; secondary: string };
 }
 
-function LevelNode({ lesson, status, courseId, levelNumber }: LevelNodeProps) {
+function LevelNode({ lesson, status, courseId, levelNumber, colors }: LevelNodeProps) {
   const isClickable = status !== 'locked';
 
   const nodeContent = (
     <div className="relative group">
-      {/* Outer glow for current */}
+      {/* Pulse ring for current lesson */}
       {status === 'current' && (
-        <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-xl animate-pulse" />
+        <>
+          <div
+            className="absolute inset-0 rounded-full animate-ping opacity-30"
+            style={{ background: colors.primary }}
+          />
+          <div
+            className="absolute -inset-2 rounded-full animate-pulse opacity-20"
+            style={{ background: colors.primary }}
+          />
+        </>
       )}
 
-      {/* Main node */}
+      {/* Main node - Duolingo-style 3D button */}
       <div
         className={cn(
-          'relative w-16 h-16 rounded-full flex items-center justify-center border-4 transition-all duration-300',
+          'relative w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200',
           {
-            'bg-slate-200 dark:bg-slate-700 border-slate-300 dark:border-slate-600 cursor-not-allowed':
-              status === 'locked',
-            'bg-white dark:bg-slate-800 border-blue-400 dark:border-blue-500 cursor-pointer hover:scale-110 hover:border-blue-500 hover:shadow-lg':
-              status === 'available',
-            'bg-gradient-to-br from-blue-500 to-purple-600 border-blue-400 cursor-pointer hover:scale-110 animate-pulse-glow':
-              status === 'current',
-            'bg-gradient-to-br from-green-400 to-green-600 border-green-400 cursor-pointer hover:scale-105':
-              status === 'completed',
+            // Locked state
+            'bg-gray-200 cursor-not-allowed': status === 'locked',
+            // Available state
+            'bg-white cursor-pointer hover:-translate-y-1': status === 'available',
+            // Current state - bouncing
+            'cursor-pointer hover:-translate-y-1': status === 'current',
+            // Completed state
+            'cursor-pointer hover:-translate-y-1': status === 'completed',
           }
         )}
+        style={{
+          boxShadow: status === 'locked'
+            ? '0 4px 0 0 #d1d5db'
+            : status === 'completed'
+              ? `0 4px 0 0 ${colors.secondary}`
+              : status === 'current'
+                ? `0 4px 0 0 ${colors.secondary}`
+                : `0 4px 0 0 #e5e7eb`,
+          background: status === 'completed'
+            ? `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
+            : status === 'current'
+              ? `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
+              : undefined,
+        }}
       >
-        {status === 'locked' && <Lock className="w-6 h-6 text-slate-400" />}
+        {status === 'locked' && <Lock className="w-6 h-6 text-gray-400" />}
         {status === 'available' && (
-          <span className="text-xl font-bold text-slate-700 dark:text-slate-200">
+          <span
+            className="text-xl font-bold"
+            style={{ color: colors.primary }}
+          >
             {levelNumber}
           </span>
         )}
-        {status === 'current' && <Play className="w-7 h-7 text-white fill-white" />}
+        {status === 'current' && (
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Play className="w-7 h-7 text-white fill-white" />
+          </motion.div>
+        )}
         {status === 'completed' && <Check className="w-7 h-7 text-white" strokeWidth={3} />}
       </div>
 
-      {/* Stars for completed */}
+      {/* Stars for completed - Duolingo style */}
       {status === 'completed' && (
-        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+        <motion.div
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-0.5"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           {[1, 2, 3].map((star) => (
             <Star
               key={star}
-              className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"
+              className="w-4 h-4 text-yellow-400 fill-yellow-400 drop-shadow"
             />
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Tooltip on hover */}
-      <div className="absolute left-1/2 -translate-x-1/2 -bottom-16 w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-        <div className="bg-slate-900 text-white text-sm rounded-lg px-3 py-2 text-center shadow-lg">
-          <div className="font-semibold">{lesson.title}</div>
-          <div className="text-slate-300 text-xs mt-0.5">
-            {lesson.xpReward} XP • {lesson.estimatedMinutes} min
+      <div className="absolute left-1/2 -translate-x-1/2 -bottom-20 w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+        <div className="bg-[#10162f] text-white text-sm rounded-xl px-4 py-3 text-center shadow-xl">
+          <div className="font-bold mb-1">{lesson.title}</div>
+          <div className="flex items-center justify-center gap-3 text-gray-300 text-xs">
+            <span className="flex items-center gap-1">
+              <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+              {lesson.xpReward} XP
+            </span>
+            <span>{lesson.estimatedMinutes} min</span>
           </div>
+          {/* Arrow */}
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-[#10162f]" />
         </div>
       </div>
     </div>

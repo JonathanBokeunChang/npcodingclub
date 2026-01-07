@@ -2,152 +2,206 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, Sparkles, Code, Terminal, Braces } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { MapPin, Calendar, ArrowRight } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 pt-16">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating code symbols */}
-        <motion.div
-          className="absolute top-20 left-10 text-blue-500/20 dark:text-blue-400/10"
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <Braces className="w-16 h-16" />
-        </motion.div>
-        <motion.div
-          className="absolute top-40 right-20 text-purple-500/20 dark:text-purple-400/10"
-          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-        >
-          <Terminal className="w-20 h-20" />
-        </motion.div>
-        <motion.div
-          className="absolute bottom-40 left-1/4 text-green-500/20 dark:text-green-400/10"
-          animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        >
-          <Code className="w-14 h-14" />
-        </motion.div>
-
-        {/* Gradient orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/30 dark:bg-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/30 dark:bg-purple-500/20 rounded-full blur-3xl" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#10162f]">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#10162f] via-[#1a1f4e] to-[#10162f]" />
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-500/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-green-500/10 rounded-full blur-[150px]" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center">
-          {/* Badge */}
+      {/* Grid pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 pt-36">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left: Text content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.7 }}
           >
-            <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Sparkles className="w-4 h-4" />
-              100% Free for Students
-            </span>
-          </motion.div>
+            {/* Location Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-5 py-2.5 rounded-full text-sm font-medium mb-10"
+            >
+              <MapPin className="w-4 h-4 text-[#29cc57]" />
+              New Providence Memorial Library
+            </motion.div>
 
-          {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
-          >
-            <span className="text-slate-900 dark:text-white">Learn to Code.</span>
-            <br />
-            <span className="gradient-text">Build the Future.</span>
-          </motion.h1>
+            {/* Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.15] tracking-tight mb-8">
+              New Providence
+              <br />
+              <span className="text-gradient">Coding Club</span>
+            </h1>
 
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl sm:text-2xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10"
-          >
-            NP Coding Club empowers middle and high school students to master
-            programming through{' '}
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">
-              gamified, project-based learning
-            </span>
-            .
-          </motion.p>
+            {/* Subheadline */}
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl leading-relaxed">
+              Free coding classes for middle and high school students. Learn web development,
+              Python, AI/ML, and competitive programming in a supportive environment.
+            </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-          >
-            <Link href="/signup">
-              <Button size="lg" className="group">
-                Start Learning Free
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/learn">
-              <Button variant="outline" size="lg" className="group">
-                <Play className="w-5 h-5 mr-2" />
+            {/* Schedule Info Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-10 max-w-md"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Calendar className="w-5 h-5 text-[#29cc57]" />
+                <span className="text-white font-semibold text-lg">Weekly Classes</span>
+              </div>
+              <p className="text-gray-400 leading-relaxed mb-3">
+                Join us every week for hands-on coding sessions, project work, and learning together.
+              </p>
+              <div className="inline-flex items-center gap-2 text-[#29cc57] font-medium">
+                <span className="w-2 h-2 bg-[#29cc57] rounded-full animate-pulse" />
+                New schedule coming soon
+              </div>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Link href="/signup" className="btn-3d btn-3d-green text-base sm:text-lg px-8 py-4">
+                Join the Club
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+              <Link href="/learn" className="btn-3d btn-3d-white text-base sm:text-lg px-8 py-4">
                 Explore Courses
-              </Button>
-            </Link>
+              </Link>
+            </div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap gap-10"
+            >
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-white">120+</div>
+                <div className="text-gray-400 text-sm mt-1">Interactive Lessons</div>
+              </div>
+              <div className="w-px bg-white/20 hidden sm:block" />
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-white">3</div>
+                <div className="text-gray-400 text-sm mt-1">Learning Paths</div>
+              </div>
+              <div className="w-px bg-white/20 hidden sm:block" />
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-[#29cc57]">100%</div>
+                <div className="text-gray-400 text-sm mt-1">Free Forever</div>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* Stats */}
+          {/* Right: Visual element */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-8 sm:gap-16"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="hidden lg:block"
           >
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
-                120+
+            <div className="relative">
+              {/* Glow effect */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-green-500/20 via-blue-500/20 to-purple-500/20 rounded-3xl blur-2xl" />
+
+              {/* Course Cards Stack */}
+              <div className="relative space-y-4">
+                {/* Web Dev Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6"
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">&lt;/&gt;</span>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">Web Development</h3>
+                      <p className="text-gray-400 text-sm">HTML, CSS, JavaScript</p>
+                    </div>
+                  </div>
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full w-3/4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full" />
+                  </div>
+                </motion.div>
+
+                {/* Python/ML Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 ml-8"
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">AI</span>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">Python & AI/ML</h3>
+                      <p className="text-gray-400 text-sm">Data Science, Machine Learning</p>
+                    </div>
+                  </div>
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full w-1/2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" />
+                  </div>
+                </motion.div>
+
+                {/* USACO Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6"
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">C++</span>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">USACO Prep</h3>
+                      <p className="text-gray-400 text-sm">Competitive Programming</p>
+                    </div>
+                  </div>
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full w-1/4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" />
+                  </div>
+                </motion.div>
               </div>
-              <div className="text-slate-600 dark:text-slate-400">Lessons</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
-                3
-              </div>
-              <div className="text-slate-600 dark:text-slate-400">Learning Paths</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
-                100%
-              </div>
-              <div className="text-slate-600 dark:text-slate-400">Free Forever</div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-slate-400 dark:border-slate-600 rounded-full flex items-start justify-center p-2"
-        >
-          <motion.div
-            animate={{ opacity: [1, 0, 1], y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1.5 h-1.5 bg-slate-400 dark:bg-slate-600 rounded-full"
+      {/* Bottom wave */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+          <path
+            d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+            fill="white"
           />
-        </motion.div>
-      </motion.div>
+        </svg>
+      </div>
     </section>
   );
 }

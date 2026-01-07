@@ -1,81 +1,84 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Quote } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    quote:
-      "NP Coding Club helped me build my first website! Now I'm teaching my younger siblings how to code.",
+    quote: "NP Coding Club made learning to code actually fun! The XP system keeps me motivated to practice every day.",
     author: 'Sarah M.',
-    role: '8th Grade',
-    avatar: '👩‍💻',
+    role: '8th Grade Student',
+    rating: 5,
   },
   {
-    quote:
-      "The USACO prep course is amazing. I went from knowing nothing about competitive programming to Bronze in 3 months!",
+    quote: "I went from zero programming knowledge to building my own website in just a few weeks. Highly recommend!",
     author: 'Alex K.',
-    role: '10th Grade',
-    avatar: '👨‍💻',
+    role: '10th Grade Student',
+    rating: 5,
   },
   {
-    quote:
-      "Learning Python and ML here got me interested in AI. I even built my own image classifier for my science fair project!",
+    quote: "The USACO prep course helped me advance from Bronze to Silver. The explanations are super clear and helpful.",
     author: 'Maya R.',
-    role: '9th Grade',
-    avatar: '👩‍🔬',
+    role: '9th Grade Student',
+    rating: 5,
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-800/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            What Our Students Say
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10162f] mb-6">
+            What Students Say
           </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Join hundreds of students who have transformed their coding skills with us.
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Join students already learning to code with us.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.author}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 relative"
+              transition={{ delay: index * 0.15 }}
+              className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-lg transition-shadow relative"
             >
               {/* Quote icon */}
-              <div className="absolute -top-4 left-8">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <Quote className="w-4 h-4 text-white" />
-                </div>
+              <div className="absolute top-6 right-6">
+                <Quote className="w-8 h-8 text-gray-200" />
+              </div>
+
+              {/* Rating */}
+              <div className="flex gap-1 mb-6">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                ))}
               </div>
 
               {/* Quote */}
-              <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed mb-6 mt-4">
+              <p className="text-gray-700 mb-8 leading-relaxed text-lg">
                 &ldquo;{testimonial.quote}&rdquo;
               </p>
 
               {/* Author */}
               <div className="flex items-center gap-4">
-                <div className="text-4xl">{testimonial.avatar}</div>
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#29cc57] to-[#20a547] flex items-center justify-center text-white font-bold text-lg">
+                  {testimonial.author.charAt(0)}
+                </div>
                 <div>
-                  <div className="font-semibold text-slate-900 dark:text-white">
+                  <div className="font-semibold text-[#10162f]">
                     {testimonial.author}
                   </div>
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-gray-500">
                     {testimonial.role}
                   </div>
                 </div>

@@ -2,140 +2,152 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code, Brain, Trophy } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { ArrowRight, Clock, BookOpen, Code, Brain, Trophy } from 'lucide-react';
+import { courses } from '@/data/courses';
 
-const courses = [
-  {
-    id: 'web-dev',
-    title: 'Web Development',
-    description:
-      'Master HTML, CSS, and JavaScript to build beautiful, interactive websites from scratch.',
+const courseConfig = {
+  'web-dev': {
+    accent: '#f97316',
+    bg: 'from-orange-500 to-red-500',
     icon: Code,
-    levels: 40,
-    xp: '4,000',
-    difficulty: 'Beginner',
-    difficultyColor: 'success' as const,
-    gradient: 'from-orange-500 to-red-500',
-    topics: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
+    iconText: '</>'
   },
-  {
-    id: 'python-ml',
-    title: 'AI & Machine Learning',
-    description:
-      'Learn Python programming and dive into data science, machine learning, and neural networks.',
+  'python-ml': {
+    accent: '#3b82f6',
+    bg: 'from-blue-500 to-cyan-500',
     icon: Brain,
-    levels: 35,
-    xp: '3,500',
-    difficulty: 'Beginner',
-    difficultyColor: 'success' as const,
-    gradient: 'from-blue-500 to-cyan-500',
-    topics: ['Python', 'NumPy', 'Pandas', 'Scikit-Learn'],
+    iconText: 'AI'
   },
-  {
-    id: 'usaco',
-    title: 'USACO Prep',
-    description:
-      'Prepare for the USA Computing Olympiad with C++ and competitive programming algorithms.',
+  'usaco': {
+    accent: '#8b5cf6',
+    bg: 'from-purple-500 to-pink-500',
     icon: Trophy,
-    levels: 45,
-    xp: '4,500',
-    difficulty: 'Advanced',
-    difficultyColor: 'warning' as const,
-    gradient: 'from-purple-500 to-pink-500',
-    topics: ['C++', 'Algorithms', 'Data Structures', 'Problem Solving'],
+    iconText: 'C++'
   },
-];
+};
 
 export function Courses() {
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-800/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Choose Your Path
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10162f] mb-6">
+            Choose Your Learning Path
           </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Three carefully crafted learning tracks to match your interests and goals.
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Three carefully crafted curricula designed to take you from
+            beginner to confident coder.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {courses.map((course, index) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/learn/${course.id}`}>
-                <Card hover className="h-full group cursor-pointer">
-                  {/* Course Icon */}
-                  <div
-                    className={`w-16 h-16 bg-gradient-to-br ${course.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
-                  >
-                    <course.icon className="w-8 h-8 text-white" />
-                  </div>
+        {/* Course Cards */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {courses.map((course, index) => {
+            const config = courseConfig[course.id as keyof typeof courseConfig];
+            const IconComponent = config.icon;
 
-                  {/* Title & Badge */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                      {course.title}
-                    </h3>
-                    <Badge variant={course.difficultyColor} size="sm">
-                      {course.difficulty}
-                    </Badge>
-                  </div>
+            return (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+              >
+                <Link href={`/learn/${course.id}`} className="block h-full">
+                  <div className="h-full bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group relative overflow-hidden">
+                    {/* Colored top bar */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-1"
+                      style={{ background: config.accent }}
+                    />
 
-                  {/* Description */}
-                  <p className="text-slate-600 dark:text-slate-400 mb-6">
-                    {course.description}
-                  </p>
-
-                  {/* Topics */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {course.topics.map((topic) => (
-                      <span
-                        key={topic}
-                        className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full text-sm"
+                    {/* Course Icon */}
+                    <div className="flex items-start justify-between mb-6">
+                      <div
+                        className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${config.bg} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
                       >
-                        {topic}
+                        <span className="text-white font-bold text-lg">{config.iconText}</span>
+                      </div>
+                      <span
+                        className="px-3 py-1.5 rounded-full text-sm font-semibold"
+                        style={{
+                          background: `${config.accent}15`,
+                          color: config.accent,
+                        }}
+                      >
+                        {course.difficulty === 'beginner' ? 'Beginner' : 'Advanced'}
                       </span>
-                    ))}
-                  </div>
+                    </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                          {course.levels}
-                        </div>
-                        <div className="text-sm text-slate-500">Levels</div>
+                    {/* Course Title */}
+                    <h3 className="text-2xl font-bold text-[#10162f] mb-3">
+                      {course.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      {course.description}
+                    </p>
+
+                    {/* Modules preview */}
+                    <div className="mb-6">
+                      <div className="text-sm font-semibold text-gray-500 mb-3">
+                        What you&apos;ll learn:
                       </div>
-                      <div>
-                        <div className="text-2xl font-bold text-yellow-500">
-                          {course.xp}
-                        </div>
-                        <div className="text-sm text-slate-500">XP</div>
+                      <div className="flex flex-wrap gap-2">
+                        {course.modules.slice(0, 3).map((module) => (
+                          <span
+                            key={module.id}
+                            className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm"
+                          >
+                            {module.name}
+                          </span>
+                        ))}
+                        {course.modules.length > 3 && (
+                          <span className="px-3 py-1.5 bg-gray-100 text-gray-500 rounded-lg text-sm">
+                            +{course.modules.length - 3} more
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                      <ArrowRight className="w-5 h-5" />
+
+                    {/* Stats */}
+                    <div className="flex items-center gap-6 text-sm text-gray-500 mb-6">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        <span>{course.totalLessons} lessons</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>{course.estimatedHours} hours</span>
+                      </div>
+                    </div>
+
+                    {/* XP and CTA */}
+                    <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                      <div className="xp-badge">
+                        {course.totalXP.toLocaleString()} XP
+                      </div>
+                      <span
+                        className="flex items-center gap-2 font-semibold group-hover:gap-3 transition-all"
+                        style={{ color: config.accent }}
+                      >
+                        Start Learning
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
                     </div>
                   </div>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
